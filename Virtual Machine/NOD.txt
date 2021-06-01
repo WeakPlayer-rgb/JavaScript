@@ -1,0 +1,44 @@
+rd 160
+rd 161
+put -1 162
+cmp 160 0
+jg @continue
+mul 160 162 160
+@continue
+cmp 161 0node
+jg @while
+mul 161 162 161
+cmp 160 0
+je @onezero
+cmp 161 0
+je @twozero
+@while
+cmp 160 0
+jle @end
+cmp 161 0
+jle @end
+cml 160 161
+jg @more
+jle @less
+@more
+mod 160 161 160
+j @while
+@less
+mod 161 160 161
+j @while
+@end
+pls 160 161 162
+prt 162
+ext 0
+@error
+ext -1
+@onezero
+cmp 161 0
+jle @error
+prt 161
+ext 0
+@twozero
+cmp 160 0
+jle @error
+prt 160
+ext 0

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamming encode</title>
+</head>
+<body>
+<div>
+    <form name="publish">
+        <input id="first_input" type="text" onkeypress="return filter_input(event,/[0-1]/)">
+        <input id="first_click" type=button value="Encode"></br>
+        <input id="decode" type="text" onkeypress="return filter_input(event,/[0-1]/)">
+        <input id="decode_input" type=button value="Decode">
+        <div id="str"></div>
+        <div id ="str2"></div>
+        <div id="str1"></div>
+    </form>
+</div>
+
+<script>
+    function filter_input(e, regexp) {
+        e = e || window.event;
+        let target = e.target || e.srcElement;
+        let isIE = document.all;
+
+        if (target.tagName.toUpperCase() == 'INPUT') {
+            let code = isIE ? e.keyCode : e.which;
+            if (code < 32 || e.ctrlKey || e.altKey) return true;
+
+            let char = String.fromCharCode(code);
+            if (!regexp.test(char)) return false;
+        }
+        return true;
+    }
+</script>
+<script>
+    first_click.onclick = function () {
+        let val = document.getElementById("first_input").value;
+        document.getElementById("decode").value = encode(val)
+    }
+
+    decode_input.onclick = function () {
+        let val = document.getElementById('decode').value
+        let result = decode(val)
+        let f = result.slice(0, result.length - 1)
+        f = reverseString(f)
+        let num = parseInt(f,2)
+
+        let bit = parseInt(result[result.length - 1])
+        let ans = ""
+        if (num === 0 && bit === 0) ans = "Всё правильно"
+        if (num === 0 && bit !== 0) {
+            ans = "Ошибка в последнем бите"
+            val = val.slice(0,val.length - 1) + ((val[val.length-1] + 1)%2).toString()
+        }
+        if (num !== 0 && bit !== 0) {
+            ans = "Ошибка в " + num.toString() + " бите"
+            val = val.slice(0,num-1) + ((parseInt(val[num-1])+1)%2).toString() + val.slice(num)
+        }
+        if (num !== 0 && bit === 0) ans = "Здесь две ошибки, не могу исправить"
+        let k = ""
+        for (let i = 0; i < val.length-1; i++) {
+            if(Number.isInteger(Math.log2(i+1))) continue;
+            k+=val[i]
+        }
+        document.getElementById('str').innerHTML =ans
+        document.getElementById('str2').innerHTML = val
+        if( ans !== "Здесь две ошибки, не могу исправить")document.getElementById('str1').innerHTML = k
+        if( ans === "Здесь две ошибки, не могу исправить")document.getElementById('str1').innerHTML = ''
+    }
+
+    function reverseString(str) {
+        let reverse = "";
+        for (let i = str.length - 1; i >= 0; i--) {
+            reverse += str[i];
+        }
+        return reverse;
+    }
+
+</script>
+<script src=Hamming.js>
+</script>
+</body>
+</html>

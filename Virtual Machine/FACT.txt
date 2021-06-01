@@ -1,0 +1,21 @@
+rd 160
+put 1 159
+cmp 160 0
+jl @n
+je @z
+cmp 160 171
+jge @ge
+@m
+mul 159 160 159
+dec 160
+cmp 160 1
+jg @m
+prt 159
+ext 0
+@n
+ext -1
+@z
+prt 159
+ext 0
+@ge
+ext -2
